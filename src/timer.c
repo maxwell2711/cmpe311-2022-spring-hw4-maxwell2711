@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // File: timer.c
-// Name: Robucci
-// 
+// Provided by: Robucci
+// Modified by: Max G
 // Desc: Uses timer to play notes
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,15 +16,13 @@
 #define MIN_PULSE_WIDTH 10
 
 void main(){
-   MusicSetupPort();
-   MusicSetupTimer1();
-   MusicSetNote(2552);
-   _delay_ms(1000);
-   MusicRest();
-
-   
-
-	};
+    MusicSetupPort();
+    MusicSetupTimer1();
+    while(1) {
+        MusicSetNote(16667,1500);
+        _delay_ms(1000);
+    }
+};
 
 // ******************************************************************************
 //  MUSIC FUNCTIONS USING TIMER 1
@@ -35,10 +33,9 @@ void MusicSetupPort(){
 	DDRB |= PORTB5_MASK; //enable PORTB5 as output
 }
 
-void MusicSetNote(int period_us){
-	ICR1=period_us/2;
-	OCR1A=period_us/4;
-	TCNT1=0;
+void MusicSetNote(int freq_period_us, int pwm_period_us){
+	ICR1=(freq_period_us)/(64); //convert to half per. and something usable for 32khz
+	OCR1A=(pwm_period_us)/(64); //convert to half pwm per. & usable for 32khz
 }
 
 void MusicRest(){
@@ -46,17 +43,17 @@ void MusicRest(){
 };
 
 void MusicPlayG(){
-	MusicSetNote(2552);
+	MusicSetNote(2552,2552);
 	MusicRest();
 }
 
 void MusicPlayA(){
-	MusicSetNote(2272);
+	MusicSetNote(2272,2272);
 	MusicRest();
 }
 
 void MusicPlayB(){
-	MusicSetNote(2024);
+	MusicSetNote(2024,2024);
 	MusicRest();
 }
 
@@ -69,7 +66,7 @@ void MusicSetupTimer1() {
 	/* Timer/Counter1 Control Register B */
 	int value_TCCR1B_ICNC1_1b = 0; //no input capture noise cancel
 	int value_TCCR1B_ICES1_1b = 0; //Dont Care since not used
-	int value_TCCR1B_CS1_3b = 2; //use clock prescaler 8...see page 131 of datasheet...1Mhz for 8Mhz clk
+	int value_TCCR1B_CS1_3b = 4; //use clock prescaler 256...see page 131 of datasheet...31.25khz for 8Mhz clk
 	TCCR1A = (value_TCCR1A_COM1A_2b << COM1A0) + (value_TCCR1A_COM1B_2b << COM1B0) + ((value_TCCR1AB_WGM1_4b&0x3) << WGM10);
 	TCCR1B = (value_TCCR1B_ICNC1_1b << ICNC1) + (value_TCCR1B_ICES1_1b << ICES1) + (((value_TCCR1AB_WGM1_4b&0b00001100)>>2) << WGM12) + (value_TCCR1B_CS1_3b<<CS10);
 	
