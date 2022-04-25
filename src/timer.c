@@ -77,6 +77,10 @@ void MusicSetupTimer1() {
 	TIMSK1 = (value_TIMSK1_ICIE1_1b <<ICIE1) + (value_TIMSK1_OCIE1B_1b<<OCIE1B) + (value_TIMSK1_OCIE1A_1b<<OCIE1A) + (value_TIMSK1_TOIE1_1b<<TOIE1);
 }
 
+// This function takes in an integer value, and checks that
+// the value is between the upper and lower bounds for OCR1A.
+// If it is out of bounds, OCR1A is set to the closest bound value 
+// (max or min).
 void SetOCR1A(int value) {
 	// Check lower bound, if value is below 10, default to 10
 	if (value < MIN_PULSE_WIDTH) {

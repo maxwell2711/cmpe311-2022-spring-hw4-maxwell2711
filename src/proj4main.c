@@ -15,8 +15,7 @@ void main(){
 		LCD_AllSegments(FALSE);
 		LCD_WriteDigit(OCR1A/10,4);
 		LCD_WriteDigit(OCR1A%10,5);
-		LCD_AllSegments(TRUE);
-        
+                
         PORTB ^= (1 << PB0); //toggle LED
         _delay_ms(1000);
     }
