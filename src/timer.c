@@ -15,6 +15,7 @@
 #include "timer.h"
 
 #define MIN_PULSE_WIDTH 10
+#define MAX_PULSE_WIDTH 38
 
 // ******************************************************************************
 //  MUSIC FUNCTIONS USING TIMER 1
@@ -74,4 +75,17 @@ void MusicSetupTimer1() {
 	int value_TIMSK1_OCIE1A_1b = 0;//output compare int. enable
 	int value_TIMSK1_TOIE1_1b = 0;//overflow int. enable
 	TIMSK1 = (value_TIMSK1_ICIE1_1b <<ICIE1) + (value_TIMSK1_OCIE1B_1b<<OCIE1B) + (value_TIMSK1_OCIE1A_1b<<OCIE1A) + (value_TIMSK1_TOIE1_1b<<TOIE1);
+}
+
+void SetOCR1A(int value) {
+	// Check lower bound, if value is below 10, default to 10
+	if (value < MIN_PULSE_WIDTH) {
+		OCR1A = MIN_PULSE_WIDTH;
+		return;
+	} else if (value > MAX_PULSE_WIDTH) { // do the same for the upper bound
+		OCR1A = MAX_PULSE_WIDTH;
+		return;
+	}
+	//The value is within the bounds
+	OCR1A = value;
 }

@@ -5,3 +5,4 @@ void MusicPlayG();
 void MusicPlayA();
 void MusicPlayB();
 void MusicSetupTimer1();
+void SetOCR1A(int value);
