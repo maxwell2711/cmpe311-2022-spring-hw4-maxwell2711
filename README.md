@@ -6,3 +6,5 @@ I cannot perceive the 60Hz refresh of the LED, but using the slow mo on my phone
 Added LCD driver files.
 
 Updated main with LCD initialization and added comments. Also added code to refresh OCR1A on the LCD every second, and toggle an LED every second.
+
+Part 2: Update 2.1 - Moved MusicSetNote() outside of the while function, and divide the period in half to get double the frequency. Also created a timer.h and moved main to its own file.
