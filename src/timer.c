@@ -18,8 +18,17 @@
 void main(){
     MusicSetupPort();
     MusicSetupTimer1();
+	LCD_Init();
     while(1) {
-        MusicSetNote(16667,1500);
+        MusicSetNote(16667,1500); //set note
+        
+        //refresh the LCD
+		LCD_AllSegments(FALSE);
+		LCD_WriteDigit(OCR1A/10,4);
+		LCD_WriteDigit(OCR1A%10,5);
+		LCD_AllSegments(TRUE);
+        
+        PORTB ^= (1 << PB0); //toggle LED
         _delay_ms(1000);
     }
 };
