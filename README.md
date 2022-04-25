@@ -10,3 +10,5 @@ Updated main with LCD initialization and added comments. Also added code to refr
 Part 2: Update 2.1 - Moved MusicSetNote() outside of the while function, and divide the period in half to get double the frequency. Also created a timer.h and moved main to its own file.
 
 2.2 - Added the SetOCR1A(int value) function. This function takes in an integer value, and checks that the value is between the upper and lower bounds for OCR1A. If it is out of bounds, OCR1A is set to the closest bound value (max or min).
+
+2.3 - Fixed the LCD so now it actually displays OCR1A, whereas before it would initialize and was being fed invalid data. Tidied up main.
