@@ -16,3 +16,5 @@ Part 2: Update 2.1 - Moved MusicSetNote() outside of the while function, and div
 2.4 - Addition of the helper.h and helper.c files. These currently only have helper functions for initializing the joystick input and checking input to change OCR1A. Also added a header guard to timer.h.
 
 Part 2 Note: After doubling the frequency, I checked the LED with my slow mo camera. At 120 fps, the flashing is not visible on the camera anymore, but at 240 fps the flashing occurs every other frame, implying a rate of 120 Hz.
+
+Part 3: Included PinChangeInterrupt.c
