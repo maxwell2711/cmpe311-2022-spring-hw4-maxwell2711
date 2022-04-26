@@ -12,3 +12,5 @@ Part 2: Update 2.1 - Moved MusicSetNote() outside of the while function, and div
 2.2 - Added the SetOCR1A(int value) function. This function takes in an integer value, and checks that the value is between the upper and lower bounds for OCR1A. If it is out of bounds, OCR1A is set to the closest bound value (max or min).
 
 2.3 - Fixed the LCD so now it actually displays OCR1A, whereas before it would initialize and was being fed invalid data. Tidied up main.
+
+2.4 - Addition of the helper.h and helper.c files. These currently only have helper functions for initializing the joystick input and checking input to change OCR1A. Also added a header guard to timer.h.
