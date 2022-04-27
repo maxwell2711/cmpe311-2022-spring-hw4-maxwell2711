@@ -6,10 +6,12 @@
 #include <xc.h>
 
 void main(){
-    MusicSetupPort();
-    MusicSetupTimer1();
-	LCD_Init();
-    JoystickInit();
+    MusicSetupPort();   //Setup the timer ports
+    MusicSetupTimer1(); //Setup the timer
+	LCD_Init();         //Initalize the LCD
+    JoystickInit();     //Initialize the joystick inputs
+    SetupInterrupts();	//setup the interrupts
+	sei();				//enable global interrupts
 
 	MusicSetNote(16667/2,1500); //set note
     while(1) {
@@ -20,6 +22,6 @@ void main(){
         CheckInput(); //check for an input and adjust OCR1A
         
         PORTB ^= (1 << PB0); //toggle LED
-        _delay_ms(1000);
+        _delay_ms(5000);
     }
 };

@@ -25,7 +25,8 @@
 //////////////
 //globals   //
 //////////////
-
+char g_servoLeft;
+char g_servoRight;
 
 //////////////
 //prototypes//
@@ -33,48 +34,6 @@
 void SetupInterrupts(void);
 void BootLoaderFixes(void);
 void PlayA(void);
-
-
-
-////////
-//MAIN//
-////////
-int main(void)
-{
-
-	#ifdef USING_BOOTLOADER
-	BootLoaderFixes();
-	#endif
-
-	/* Initialize and Clear the LCD */
-	LCD_Init();
-	LCD_WriteDigit('N',5);
-
-	//Setup All Pushbuttons
-	DDRB  &= ~0b11010000;  //set B4,B6,B7 as inputs
-	DDRE  &= ~0b00001100;  //set all to inputs
-
-	PORTB |=  0b11010000;  //enable pull up resistors on B4,B6,B7
-	PORTE |=  0b00001100;  //enable pull up resistor on pin E2,E3
-
-
-
-	//Setup Output for Music
-	DDRB |= (1<<5); 	//enable PORTB5 as output
-	DDRB |= (1<<0); 	//enable PORTB0 as output for the first LED
-	DDRB |= (1<<1); 	//enable PORTB1 as output for the second LED
-
-	SetupInterrupts();	//setup the interrupts
-	sei();				//enable global interrupts
-
-	PlayA(); 			//play A when program starts running
-
-	for(;;)				//flash led on pin B1 every second
-	{
-		PORTB ^= (1<<1);
-		_delay_ms(1000);
-	}
-}
 
 ////////////////////////
 //Function Definitions//
@@ -84,8 +43,10 @@ int main(void)
 void SetupInterrupts(void)
 {
 	//Setup for Center Button Interrupt
-	PCMSK1  |= (1<<PCINT12); //Unmask bit for Center Button on Butterfly, PB4->PCINT12 to allow it to trigger interrupt flag PCIF1
-	EIMSK   = (1<<PCIE1);    //Enable interrupt for flag PCIF1
+	PCMSK0  |= (1<<PCINT2); //Unmask bit for Left Button on Butterfly, PE2->PCINT2 to allow it to trigger interrupt flag PCIF0
+	PCMSK0  |= (1<<PCINT3); //Unmask bit for Right Button on Butterfly, PE3->PCINT3
+
+    EIMSK   = (1<<PCIF0);    //Enable interrupt for flag PCIF0
 }
 
 
@@ -105,36 +66,21 @@ void BootLoaderFixes(void)
 
 ISR(PCINT1_vect) 		//remember this is called on pin change 0->1 and 1->0
 {
-	static uint8_t pinBPrev=1; //for storing previous value of port to detect
+	static uint8_t pinEPrev=1; //for storing previous value of port to detect 
 
-	PlayA(); //play note every time interrupt is called
-
-	//toggle PORTB0 based on center button status being newly pressed, but not when it is released
-	if(((PINB     & (1<<4))  == 0) &&
-	((pinBPrev & (1<<4))  != 0))
+	//change global vars based on L/R button status being newly pressed, but not when it is released
+	if(((PINE & (1<<PE2))  == 0) &&
+	((pinEPrev & (1<<PE2))  != 0))
 	{
 		//if button pressed (bit is zero) and previous it wasn't
-		PORTB ^= (1<<0); //toggle led on B0
-		LCD_WriteDigit('C',5);
+		g_servoLeft = 1; //set global variable
 	}
-	else
+	else if (((PINE & (1<<PE3)) == 0) &&
+          ((pinEPrev & (1<<PE3)) != 0))
 	{
-		//do nothing
+        //if button pressed (bit is zero) and previous it wasn't
+		g_servoRight = 1; //set global variable
 	}
 
-	pinBPrev = PINB; //save button status
+	pinEPrev = PINE; //save button status
 }
-
-
-void PlayA()
-{
-	for (uint8_t i = 0 ; i < 110 ; ++i)
-	{
-		PORTB ^= (1<<5);            //toggle PORTB5
-		_delay_us(500);
-		_delay_us(500);
-		_delay_us(136);
-	}
-}
-
-
