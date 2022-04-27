@@ -4,14 +4,6 @@
  *
  * Created on April 25, 2022, 9:23 PM
  */
-
-
-#include <xc.h>
-#include "helpers.h"
-#include "timer.h"
-#include "U0_LCD_Driver.h"
-#include "PinChangeInterrupt.c"
-
 // PART 2 CHECKINPUT
 //void CheckInput() {
 //    //Check input on the left
@@ -22,15 +14,17 @@
 //        SetOCR1A(OCR1A+1); //increase pulse width by 1
 //    }
 //}
+#include "helpers.h"
+#include "PinChangeInterrupt.h"
 
 void CheckInput() {
-    //check global vars
+    //check global variables
     if (g_servoLeft) {
         SetOCR1A(OCR1A-1); //reduce pulse width by 1
         g_servoLeft = 0;
     }
     if (g_servoRight) {
-        SetOCR1A(OCR1A+1);
+        SetOCR1A(OCR1A+1); //increase pulse width by 1
         g_servoRight = 0;
     }
 }

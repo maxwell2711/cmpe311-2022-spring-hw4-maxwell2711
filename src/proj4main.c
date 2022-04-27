@@ -1,9 +1,24 @@
 #include "U0_LCD_Driver.h"
 #include "timer.h"
 #include "util/delay.h"
-#include "avr/interrupt.h"
 #include "helpers.h"
+#include "PinChangeInterrupt.h"
 #include <xc.h>
+#include <avr/interrupt.h>
+
+//comment out the following line if not using the bootloader
+//#define USING_BOOTLOADER
+
+//set F_CPU if not set already, dependent on use of boot loader
+#ifndef F_CPU
+
+#ifdef USING_BOOTLOADER
+#define F_CPU 2000000UL
+#else
+#define F_CPU 8000000UL
+#endif
+
+#endif
 
 void main(){
     MusicSetupPort();   //Setup the timer ports
@@ -22,6 +37,6 @@ void main(){
         CheckInput(); //check for an input and adjust OCR1A
         
         PORTB ^= (1 << PB0); //toggle LED
-        _delay_ms(5000);
+        _delay_ms(1000);
     }
 };

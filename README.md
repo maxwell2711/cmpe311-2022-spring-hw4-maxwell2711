@@ -5,7 +5,7 @@ I cannot perceive the 60Hz refresh of the LED, but using the slow mo on my phone
 
 Added LCD driver files.
 
-Updated main with LCD initialization and added comments. Also added code to refresh OCR1A on the LCD every second, and toggle an LED every second.
+Updated main with LCD initialization and added comments. Also added code to refresh OCR1A on the LCD every second, and toggle an LED every 1000ms; however, the LED appears to blink as much as 5x faster than 1000ms.
 
 Part 2: Update 2.1 - Moved MusicSetNote() outside of the while function, and divide the period in half to get double the frequency. Also created a timer.h and moved main to its own file.
 
@@ -18,3 +18,4 @@ Part 2: Update 2.1 - Moved MusicSetNote() outside of the while function, and div
 Part 2 Note: After doubling the frequency, I checked the LED with my slow mo camera. At 120 fps, the flashing is not visible on the camera anymore, but at 240 fps the flashing occurs every other frame, implying a rate of 120 Hz.
 
 Part 3: Included PinChangeInterrupt.c
+3.1: Created header file for PinChangeInterrupt with the function prototypes and global variables, and removed the PlayA function from the the header and c file. Moved the F_CPU define to proj4main. SetupInterrupts was altered such that it enables interrupts for PE2/PCINT2 and PE3/PCINT3 and the ISR vector was changed to PCINT0_vect. Cleaned up includes and comments in helpers.c.

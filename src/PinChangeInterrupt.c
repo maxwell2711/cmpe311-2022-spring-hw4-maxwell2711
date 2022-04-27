@@ -1,39 +1,12 @@
 //include for MPLAB (when using MPLAB, might not need some includes that follow)
 #include <xc.h>
-
-//comment out the following line if not using the bootloader
-//#define USING_BOOTLOADER
-
-//set F_CPU if not set already, dependent on use of boot loader
-#ifndef F_CPU
-
-#ifdef USING_BOOTLOADER
-#define F_CPU 2000000UL
-#else
-#define F_CPU 8000000UL
-#endif
-
-#endif
-
-
 #include <util/delay.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
-
+#include "PinChangeInterrupt.h"
 #include "U0_LCD_Driver.h"
 
-//////////////
-//globals   //
-//////////////
-char g_servoLeft;
-char g_servoRight;
 
-//////////////
-//prototypes//
-//////////////
-void SetupInterrupts(void);
-void BootLoaderFixes(void);
-void PlayA(void);
 
 ////////////////////////
 //Function Definitions//
@@ -43,10 +16,12 @@ void PlayA(void);
 void SetupInterrupts(void)
 {
 	//Setup for Center Button Interrupt
-	PCMSK0  |= (1<<PCINT2); //Unmask bit for Left Button on Butterfly, PE2->PCINT2 to allow it to trigger interrupt flag PCIF0
-	PCMSK0  |= (1<<PCINT3); //Unmask bit for Right Button on Butterfly, PE3->PCINT3
+    //Unmask bit for Left Button on Butterfly, 
+    //PE2->PCINT2 to allow it to trigger interrupt flag PCIF0
+	PCMSK0  |= (1<<PCINT2) | (1<<PCINT3); 
+    
 
-    EIMSK   = (1<<PCIF0);    //Enable interrupt for flag PCIF0
+    EIMSK   = (1<<PCIE0);    //Enable interrupt for flag PCIF0
 }
 
 
@@ -64,7 +39,7 @@ void BootLoaderFixes(void)
 ////////////////////
 
 
-ISR(PCINT1_vect) 		//remember this is called on pin change 0->1 and 1->0
+ISR(PCINT0_vect) 		//remember this is called on pin change 0->1 and 1->0
 {
 	static uint8_t pinEPrev=1; //for storing previous value of port to detect 
 
