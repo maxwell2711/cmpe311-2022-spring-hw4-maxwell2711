@@ -19,3 +19,5 @@ Part 2 Note: After doubling the frequency, I checked the LED with my slow mo cam
 
 Part 3: Included PinChangeInterrupt.c
 3.1: Created header file for PinChangeInterrupt with the function prototypes and global variables, and removed the PlayA function from the the header and c file. Moved the F_CPU define to proj4main. SetupInterrupts was altered such that it enables interrupts for PE2/PCINT2 and PE3/PCINT3 and the ISR vector was changed to PCINT0_vect. Cleaned up includes and comments in helpers.c.
+
+Part 3 Note: Adding support for interrupt driven inputs allowed for the inputs to feel more responsive. Using the code from part 2, the OCR1A value would only change if you held the button during the check on the input pins, which occurs approximately every 1000ms. After adding interrupt driven joystick input support, the program will still only allow you to update the OCR1A about once every 1000ms, but now an input which occurs in the duration of the 1000ms delay period will still be registered and handled by the program at the end of the delay period. This gives the system a much more responsive feel because all of your inputs are actually responded to.
