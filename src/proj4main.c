@@ -29,6 +29,8 @@ void main(){
 	sei();				//enable global interrupts
     ADCSetup();         //setup ADC
 
+    DDRB |= (1<<PB0);
+
 	MusicSetNote(16667/2,1500); //set note
     while(1) {
         //refresh the LCD
@@ -37,7 +39,7 @@ void main(){
 
         CheckInput(); //check for an input and adjust OCR1A
         
-        int adc = ADCAquire(); //Get an ADC reading
+        int adcValue = ADCAquire(); //Get an ADC reading
         LCD_WriteDigit((adcValue%10)+'0',3); //Display ones place
         LCD_WriteDigit((adcValue%100/10)+'0',2); //display tens place
         LCD_WriteDigit((adcValue%1000/100)+'0',1); //display hundreds place
