@@ -1,11 +1,3 @@
-#include "U0_LCD_Driver.h"
-#include "timer.h"
-#include "util/delay.h"
-#include "helpers.h"
-#include "PinChangeInterrupt.h"
-#include <xc.h>
-#include <avr/interrupt.h>
-
 //comment out the following line if not using the bootloader
 //#define USING_BOOTLOADER
 
@@ -20,6 +12,16 @@
 
 #endif
 
+#include "U0_LCD_Driver.h"
+#include "timer.h"
+#include "util/delay.h"
+#include "helpers.h"
+#include "ADC.h"
+#include "PinChangeInterrupt.h"
+#include "UART.h"
+#include <xc.h>
+#include <avr/interrupt.h>
+
 void main(){
     MusicSetupPort();   //Setup the timer ports
     MusicSetupTimer1(); //Setup the timer
@@ -28,25 +30,42 @@ void main(){
     SetupInterrupts();	//setup the interrupts
 	sei();				//enable global interrupts
     ADCSetup();         //setup ADC
+    stderr = stdout = stdin  = &uart_stream; //redirect standard i/o
+    UARTInit();         //initialize UART
+
 
     DDRB |= (1<<PB0);
 
 	MusicSetNote(16667/2,1500); //set note
     while(1) {
+        _delay_ms(500); //delay half second
+        int adcValue = ADCAquire(); //Get an ADC reading
+        LCD_WriteDigit((adcValue%10)+'0',3); //Display ones place
+        LCD_WriteDigit((adcValue%100/10)+'0',2); //display tens place
+        LCD_WriteDigit((adcValue%1000/100)+'0',1); //display hundreds place
+        LCD_WriteDigit((adcValue/1000)+'0',0); //display thousands place
+
+        int adc1  = adcValue; //save for compare
+
         //refresh the LCD
 		LCD_WriteDigit((OCR1A/10)+'0',4);
 		LCD_WriteDigit((OCR1A%10)+'0',5);
 
         CheckInput(); //check for an input and adjust OCR1A
         
-        int adcValue = ADCAquire(); //Get an ADC reading
+        PORTB ^= (1 << PB0); //toggle LED
+        
+        _delay_ms(500); //delay for a second
+
+        adcValue = ADCAquire(); //Get an ADC reading
         LCD_WriteDigit((adcValue%10)+'0',3); //Display ones place
         LCD_WriteDigit((adcValue%100/10)+'0',2); //display tens place
         LCD_WriteDigit((adcValue%1000/100)+'0',1); //display hundreds place
         LCD_WriteDigit((adcValue/1000)+'0',0); //display thousands place
-        
-        PORTB ^= (1 << PB0); //toggle LED
-        
-        _delay_ms(1000); //delay for a second
+
+        int16_t lightDiff = adcValue - adc1;
+
+        SendData(lightDiff, OCR1A);
+
     }
 };

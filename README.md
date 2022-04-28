@@ -32,3 +32,4 @@ Part 4 Note: The ADC result is 10 bits, meaning that the adc has 2^10 possible v
 
 Part 5 (5.1) - Included UART.c and UART.h.
 
+(5.2) - Implemented UART to display the difference. Changed main to calculate difference. Also fixed the F_CPU being wrong when delay.h is linked.

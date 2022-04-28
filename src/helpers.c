@@ -15,7 +15,6 @@
 //    }
 //}
 #include "helpers.h"
-#include "PinChangeInterrupt.h"
 
 void CheckInput() {
     //check global variables
@@ -37,4 +36,13 @@ void JoystickInit() {
     //initialize right joystick on PE3
     DDRE &= !(1<<PE3); //indicate input on the right joystick
     PORTE |= (1<<PE3); //enable pull-up
+}
+
+void SendData(int16_t lightDiff, uint16_t ocrVal) {
+    UARTPutch('*',uart_stream); //send *
+    UARTPutch(ocrVal<<8>>8, uart_stream); //send low byte
+    UARTPutch(ocrVal>>8,uart_stream); //send high byte
+    UARTPutch('$',uart_stream); //send $
+    UARTPutch(lightDiff<<8>>8, uart_stream); //send low byte
+    UARTPutch(lightDiff>>8,uart_stream); //send high byte
 }
