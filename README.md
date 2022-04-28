@@ -29,3 +29,6 @@ Part 4 (4.1) - Included ADC.c discussion code and created a header file with the
 (4.2) - Modified the discussion code for our purposes: Checked that ADCSetup uses ADC2 channel, filled out ADCGet function. Added ADCSetup call in main. Called the write to LCD function using the value in each digit position of the ADC value and displayed them on displays 0-3.
 
 Part 4 Note: The ADC result is 10 bits, meaning that the adc has 2^10 possible values or 1024 values. Four display positions allows for representation of all possible values from 0000-1024.
+
+Part 5 (5.1) - Included UART.c and UART.h.
+
