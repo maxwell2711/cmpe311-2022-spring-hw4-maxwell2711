@@ -27,6 +27,7 @@ void main(){
     JoystickInit();     //Initialize the joystick inputs
     SetupInterrupts();	//setup the interrupts
 	sei();				//enable global interrupts
+    ADCSetup();         //setup ADC
 
 	MusicSetNote(16667/2,1500); //set note
     while(1) {
@@ -36,7 +37,14 @@ void main(){
 
         CheckInput(); //check for an input and adjust OCR1A
         
+        int adc = ADCAquire(); //Get an ADC reading
+        LCD_WriteDigit((adcValue%10)+'0',3); //Display ones place
+        LCD_WriteDigit((adcValue%100/10)+'0',2); //display tens place
+        LCD_WriteDigit((adcValue%1000/100)+'0',1); //display hundreds place
+        LCD_WriteDigit((adcValue/1000)+'0',0); //display thousands place
+        
         PORTB ^= (1 << PB0); //toggle LED
-        _delay_ms(1000);
+        
+        _delay_ms(1000); //delay for a second
     }
 };

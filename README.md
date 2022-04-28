@@ -25,3 +25,7 @@ Part 3 (3.1) - Included PinChangeInterrupt.c
 Part 3 Note: Adding support for interrupt driven inputs allowed for the inputs to feel more responsive. Using the code from part 2, the OCR1A value would only change if you held the button during the check on the input pins, which occurs approximately every 1000ms. After adding interrupt driven joystick input support, the program will still only allow you to update the OCR1A about once every 1000ms, but now an input which occurs in the duration of the 1000ms delay period will still be registered and handled by the program at the end of the delay period. This gives the system a much more responsive feel because all of your inputs are actually responded to.
 
 Part 4 (4.1) - Included ADC.c discussion code and created a header file with the appropriate function prototypes. 
+
+(4.2) - Modified the discussion code for our purposes: Checked that ADCSetup uses ADC2 channel, filled out ADCGet function. Added ADCSetup call in main. Called the write to LCD function using the value in each digit position of the ADC value and displayed them on displays 0-3.
+
+Part 4 Note: The ADC result is 10 bits, meaning that the adc has 2^10 possible values or 1024 values. Four display positions allows for representation of all possible values from 0000-1024.

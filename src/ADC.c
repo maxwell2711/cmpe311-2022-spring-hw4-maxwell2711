@@ -1,3 +1,11 @@
+/*
+ * File:   ADC.c
+ * Author: maxwe
+ *
+ * Created on April 27, 2022, 12:59 PM
+ */
+
+#include <xc.h>
 #include "ADC.h"
 void ADCSetup(){
     // AVR Butteryfly Board Info:
@@ -14,7 +22,7 @@ void ADCSetup(){
     //Select Voltage Reference, Set Left-Ship Option, Set Input Channel
     int refSel_2b=1;    //select avcc, change to 3 for 1.1V reference
     int adlar_1b=0;     //no need to left shift
-    int muxSel_5b = XYZ;  //select ADC0 with single-ended conversion
+    int muxSel_5b = 2;  //select ADC2 with single-ended conversion
     ADMUX = (refSel_2b << REFS0) + (adlar_1b<<ADLAR) + (muxSel_5b << MUX0);
 
     //enable adc and with interrupt disabled
@@ -40,7 +48,9 @@ int ADCIsConversionCompleteFlagSet(){
 
 // modify this command to return ADC, value.  Hint: you can access it by using the macro symbol ADC.  Note, if accessing the high and low bytes individually, access ADCL first then ADCH
 uint16_t ADCGet(){
-    YOU ARE MISSING SOMETHING HERE
+  uint16_t low=ADCL;
+  uint16_t high=ADCH;
+  return low|(high<<8);
 }
 
 int ADCAquire(){
